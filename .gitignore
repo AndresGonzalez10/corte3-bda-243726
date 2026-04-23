@@ -1,0 +1,27 @@
+# Dependencias de Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Compilación de TypeScript (tu nueva carpeta de salida)
+dist/
+build/
+
+# Variables de entorno y credenciales (¡CRÍTICO PARA SEGURIDAD!)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Archivos de caché y herramientas
+.eslintcache
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
