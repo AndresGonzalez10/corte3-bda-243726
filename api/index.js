@@ -2,26 +2,25 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
-// Importar rutas
-const authRoutes = require('./routes/authRoutes');
+// Importar SOLO las rutas que sí creamos
 const mascotasRoutes = require('./routes/mascotasRoutes');
 const vacunasRoutes = require('./routes/vacunasRoutes');
-const citasRoutes = require('./routes/citasRoutes'); // Asumiendo que crearás este archivo
-const veterinariosRoutes = require('./routes/veterinariosRoutes'); // Asumiendo que crearás este archivo
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-app.use(cors());
+// Toma el puerto dinámico de la variable de entorno
+const PORT = process.env.API_PORT_INTERNAL || 4000;
+
+app.use(cors({
+  origin: ['http://localhost:3001', 'http://clinica_frontend:3000'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Montaje de rutas
-app.use('/api/login', authRoutes);
 app.use('/api/mascotas', mascotasRoutes);
 app.use('/api/vacunas', vacunasRoutes);
-app.use('/api/citas', citasRoutes);
-app.use('/api/veterinarios', veterinariosRoutes);
 
-app.listen(PORT, () => {
-  console.log(`[API] Corriendo en http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[API] Corriendo en el puerto: ${PORT}`);
 });

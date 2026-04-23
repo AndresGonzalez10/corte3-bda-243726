@@ -40,7 +40,7 @@ const aplicarVacuna = async (req, res) => {
 
     await client.query('BEGIN');
     if (auth.usuario.rol === 'veterinario' && auth.usuario.vet_id !== null) {
-      await client.query(`SET LOCAL app.vet_id = $1`, [auth.usuario.vet_id.toString()]);
+      await client.query(`SET LOCAL app.vet_id = '${usuario.vet_id}'`);
     }
 
     await client.query(`

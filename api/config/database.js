@@ -2,11 +2,11 @@ const { Pool } = require('pg');
 const USUARIOS = require('./users');
 
 const pool = new Pool({
-  host:     process.env.PG_HOST     || 'localhost',
-  port:     parseInt(process.env.PG_PORT) || 5432,
-  database: process.env.PG_DATABASE || 'clinica_vet',
-  user:     'postgres',
-  password: 'postgres',
+  host:     process.env.PG_HOST,
+  port:     parseInt(process.env.PG_PORT_INTERNAL),
+  database: process.env.POSTGRES_DB,
+  user:     process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
 });
 
 async function getAuthenticatedClient(username) {
@@ -14,9 +14,9 @@ async function getAuthenticatedClient(username) {
   if (!usuario) throw new Error('Usuario no reconocido');
 
   const dedicatedPool = new Pool({
-    host:     process.env.PG_HOST     || 'localhost',
-    port:     parseInt(process.env.PG_PORT) || 5432,
-    database: process.env.PG_DATABASE || 'clinica_vet',
+    host:     process.env.PG_HOST,
+    port:     parseInt(process.env.PG_PORT_INTERNAL),
+    database: process.env.POSTGRES_DB,
     user:     usuario.pgUser,
     password: usuario.pgPass,
   });
@@ -24,8 +24,7 @@ async function getAuthenticatedClient(username) {
   const client = await dedicatedPool.connect();
 
   if (usuario.rol === 'veterinario' && usuario.vet_id !== null) {
-    // HARDENING: vet_id viene de configuración interna, no de input
-    await client.query(`SET LOCAL app.vet_id = $1`, [usuario.vet_id.toString()]);
+    await client.query(`SET LOCAL app.vet_id = '${usuario.vet_id}'`);
   }
 
   return { client, usuario, dedicatedPool };

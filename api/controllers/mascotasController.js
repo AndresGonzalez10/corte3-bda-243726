@@ -11,7 +11,7 @@ const buscarMascotas = async (req, res) => {
 
     await client.query('BEGIN');
     if (auth.usuario.rol === 'veterinario' && auth.usuario.vet_id !== null) {
-      await client.query(`SET LOCAL app.vet_id = $1`, [auth.usuario.vet_id.toString()]);
+      await client.query(`SET LOCAL app.vet_id = '${auth.usuario.vet_id}'`);
     }
 
     // HARDENING PRINCIPAL: Parámetro posicional $1 para evitar SQL Injection
@@ -45,7 +45,7 @@ const listarMascotas = async (req, res) => {
 
     await client.query('BEGIN');
     if (auth.usuario.rol === 'veterinario' && auth.usuario.vet_id !== null) {
-      await client.query(`SET LOCAL app.vet_id = $1`, [auth.usuario.vet_id.toString()]);
+      await client.query(`SET LOCAL app.vet_id = '${auth.usuario.vet_id}'`);
     }
 
     const result = await client.query(`
